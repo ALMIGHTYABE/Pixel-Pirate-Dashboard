@@ -1,0 +1,4 @@
+pyyaml
+pandas
+plotly-express
+streamlit
