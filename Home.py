@@ -40,7 +40,7 @@ nft_df = get_data()
 # Dashboard Title
 st.title("Pixel Pirate Tracker")
 # st.markdown("# Pixel Pirate Tracker️")
-st.sidebar.markdown("# Pixel Pirate Tracker️")
+# st.sidebar.markdown("# Pixel Pirate Tracker️")
 
 # Top-Level Filters
 address_filter = st.multiselect("Select your address", pd.unique(df["address"]))
