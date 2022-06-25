@@ -39,6 +39,7 @@ def get_data() -> pd.DataFrame:
 
 df = get_data()
 
+
 # # Formatting Image URL
 # image_url = []
 # for i in df['image']:
@@ -87,7 +88,7 @@ with placeholder.container():
     try:
         image_number = selection["selected_rows"][0]['number']
         image_url = (df[df['number'] == image_number]['image']).iloc[0]
-    except:
+    except Exception as e:
         image_number = ""
         image_url = "https://www.liquiddriver.finance/static/media/logoImg.32a133f7.svg"
 
