@@ -2,3 +2,4 @@ pyyaml
 pandas
 plotly-express
 streamlit
+streamlit-aggrid

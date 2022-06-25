@@ -1,10 +1,11 @@
+# Importing Libraries
 import time
-
 import pandas as pd  # read csv, df manipulation
-import plotly.express as px  # interactive charts
+# import plotly.express as px  # interactive charts
 import streamlit as st  # data web app development
 import yaml
-from PIL import Image
+from st_aggrid import AgGrid, GridOptionsBuilder
+from st_aggrid.shared import GridUpdateMode
 
 # App
 st.set_page_config(
@@ -37,15 +38,8 @@ def get_data() -> pd.DataFrame:
 df = get_data()
 nft_df = get_data()
 
-# Dashboard Title
-st.title("Pixel Pirate Tracker")
-# st.markdown("# Pixel Pirate Tracker️")
-# st.sidebar.markdown("# Pixel Pirate Tracker️")
-
-# Top-Level Filters
-address_filter = st.multiselect("Select your address", pd.unique(df["address"]))
-
-# Sidebar - title & filters
+# Data Manipulation
+## Sidebar Data
 batch = pd.unique(df["Batch"])
 type = pd.unique(df["Type"])
 background = pd.unique(df["Background"])
@@ -60,6 +54,13 @@ hand = pd.unique(df["Hand_Accessories"])
 shoulder = pd.unique(df["Shoulder"])
 mouth = pd.unique(df["Mouth"])
 
+# Dashboard Title
+st.title("Pixel Pirate Tracker")
+
+# Top-Level Filters
+address_filter = st.multiselect("Select your address", pd.unique(df["address"]))
+
+# Sidebar - title & filters
 st.sidebar.markdown('### Data Filters')
 batch_choice = st.sidebar.multiselect(
     'Choose batch:', batch, default=batch)
@@ -107,17 +108,73 @@ df = df[df["Hand_Accessories"].isin(hand_choice)]
 df = df[df["Shoulder"].isin(shoulder_choice)]
 df = df[df["Mouth"].isin(mouth_choice)]
 
-traits = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder', 'Mouth']
+# traits = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder', 'Mouth']
 
+
+# Finding Missing Traits
 background_missing = [i for i in background if i not in pd.unique(df["Background"])]
+base_missing = [i for i in base if i not in pd.unique(df["Base"])]
+outfit_missing = [i for i in outfit if i not in pd.unique(df["Outfit"])]
+necklace_missing = [i for i in necklace if i not in pd.unique(df["Necklace"])]
+eye_missing = [i for i in eye if i not in pd.unique(df["Eye"])]
+beard_missing = [i for i in beard if i not in pd.unique(df["Beard"])]
+hair_missing = [i for i in hair if i not in pd.unique(df["Hair"])]
+hat_missing = [i for i in hat if i not in pd.unique(df["Hat"])]
+hand_missing = [i for i in hand if i not in pd.unique(df["Hand_Accessories"])]
+shoulder_missing = [i for i in shoulder if i not in pd.unique(df["Shoulder"])]
+mouth_missing = [i for i in mouth if i not in pd.unique(df["Mouth"])]
 
+missing = pd.DataFrame(
+    [background_missing, base_missing, outfit_missing, necklace_missing, eye_missing, beard_missing, hair_missing,
+     hat_missing, hand_missing, shoulder_missing, mouth_missing])
+missing = missing.transpose()
+missing.columns = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories',
+                   'Shoulder', 'Mouth']
+missing.fillna('', inplace=True)
+
+
+# Aggrid Defined
+def aggrid_interactive_table(df: pd.DataFrame):
+    """Creates an st-aggrid interactive table based on a dataframe.
+
+    Args:
+        df (pd.DataFrame]): Source dataframe
+
+    Returns:
+        dict: The selected row
+    """
+    options = GridOptionsBuilder.from_dataframe(df, enableRowGroup=True, enableValue=True, enablePivot=True)
+    options.configure_side_bar(filters_panel=True)
+    options.configure_selection("single")
+
+    selection = AgGrid(
+        df,
+        enable_enterprise_modules=True,
+        gridOptions=options.build(),
+        theme="light",
+        update_mode=GridUpdateMode.MODEL_CHANGED,
+        allow_unsafe_jscode=True,
+    )
+
+    return selection
+
+
+# Empty Placeholder Filled
 with placeholder.container():
+    # Image
     st.image(df["image"].tolist(), caption=["# " + str(i) for i in df["number"]], width=100)  # Images
 
+    # Filtered Table
     st.markdown("### PP Details")
-    st.dataframe(df[['number', 'Batch', 'Type', 'Total Score', 'Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder', 'Mouth',]])
+    selection = aggrid_interactive_table(
+        df[['number', 'Batch', 'Type', 'Total Score', 'Background', 'Base', 'Outfit',
+            'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder',
+            'Mouth']])
 
-    st.markdown("### Missing Traits")
-    # st.dataframe(background_missing)
-    st.write(background_missing)
+    # Filtered Missing Traits
+    missing_traits = st.checkbox('See Missing Traits')
+    if missing_traits:
+        st.markdown("### Missing Traits")
+        selection = aggrid_interactive_table(missing)
+
     time.sleep(1)
