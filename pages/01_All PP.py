@@ -96,6 +96,6 @@ with placeholder.container():
     if selection:
         st.write("You selected:")
 
-        st.image(image_url, caption=["# " + str(image_number)], width=100)  # Images
+        st.image(image_url, caption=["# " + str(image_number)], width=200)  # Images
 
     time.sleep(1)
