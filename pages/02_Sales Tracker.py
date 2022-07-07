@@ -33,7 +33,7 @@ dataset_url = config["main"]["data-source"]
 api_url = config["sales"]["api"]
 
 
-@st.experimental_memo
+# @st.experimental_memo
 def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 

@@ -30,7 +30,7 @@ config = read_params(params_path)
 dataset_url = config["main"]["data-source"]
 
 
-@st.experimental_memo
+# @st.experimental_memo
 def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 
