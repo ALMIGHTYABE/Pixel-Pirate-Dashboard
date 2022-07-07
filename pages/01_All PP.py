@@ -40,12 +40,70 @@ def get_data() -> pd.DataFrame:
 
 df = get_data()
 
+# Sidebar Data
+batch = pd.unique(df["Batch"])
+type = pd.unique(df["Type"])
+# score_min = df["Total Score"].min()
+# score_max = df["Total Score"].max()
+background = pd.unique(df["Background"])
+base = pd.unique(df["Base"])
+outfit = pd.unique(df["Outfit"])
+necklace = pd.unique(df["Necklace"])
+eye = pd.unique(df["Eye"])
+beard = pd.unique(df["Beard"])
+hair = pd.unique(df["Hair"])
+hat = pd.unique(df["Hat"])
+hand = pd.unique(df["Hand_Accessories"])
+shoulder = pd.unique(df["Shoulder"])
+mouth = pd.unique(df["Mouth"])
 
-# # Formatting Image URL
-# image_url = []
-# for i in df['image']:
-#     image_url.append('<img src=' + i + ' width="100">')
-# df['image'] = image_url
+# Sidebar - title & filters
+st.sidebar.markdown('### Data Filters')
+batch_choice = st.sidebar.multiselect(
+    'Choose batch:', batch, default=batch)
+type_choice = st.sidebar.multiselect(
+    'Choose type:', type, default=type)
+# score_range = st.slider(
+# 'Select a score range', value=[score_min, score_max])
+background_choice = st.sidebar.multiselect(
+    'Choose background:', background, default=background)
+base_choice = st.sidebar.multiselect(
+    'Choose base:', base, default=base)
+outfit_choice = st.sidebar.multiselect(
+    'Choose outfit:', outfit, default=outfit)
+necklace_choice = st.sidebar.multiselect(
+    'Choose necklace:', necklace, default=necklace)
+eye_choice = st.sidebar.multiselect(
+    'Choose eye:', eye, default=eye)
+beard_choice = st.sidebar.multiselect(
+    'Choose beard:', beard, default=beard)
+hair_choice = st.sidebar.multiselect(
+    'Choose hair:', hair, default=hair)
+hat_choice = st.sidebar.multiselect(
+    'Choose hat:', hat, default=hat)
+hand_choice = st.sidebar.multiselect(
+    'Choose hand:', hand, default=hand)
+shoulder_choice = st.sidebar.multiselect(
+    'Choose shoulder:', shoulder, default=shoulder)
+mouth_choice = st.sidebar.multiselect(
+    'Choose mouth:', mouth, default=mouth)
+
+# dataframe filter
+df = df[df["Batch"].isin(batch_choice)]
+df = df[df["Type"].isin(type_choice)]
+# df = df[df["Total Score"].between(score_range[0], score_range[1], inclusive="both")]
+df = df[df["Background"].isin(background_choice)]
+df = df[df["Base"].isin(base_choice)]
+df = df[df["Outfit"].isin(outfit_choice)]
+df = df[df["Necklace"].isin(necklace_choice)]
+df = df[df["Eye"].isin(eye_choice)]
+df = df[df["Beard"].isin(beard_choice)]
+df = df[df["Hair"].isin(hair_choice)]
+df = df[df["Hat"].isin(hat_choice)]
+df = df[df["Hand_Accessories"].isin(hand_choice)]
+df = df[df["Shoulder"].isin(shoulder_choice)]
+df = df[df["Mouth"].isin(mouth_choice)]
+
 
 # Aggrid Defined
 def aggrid_interactive_table(df: pd.DataFrame):
@@ -57,9 +115,10 @@ def aggrid_interactive_table(df: pd.DataFrame):
     Returns:
         dict: The selected row
     """
-    options = GridOptionsBuilder.from_dataframe(df, enableRowGroup=True, enableValue=True, enablePivot=True)
+    options = GridOptionsBuilder.from_dataframe(df, enableRowGroup=True, enableValue=True, enablePivot=True,
+                                                autoHeight=True)
     options.configure_side_bar(filters_panel=True)
-    options.configure_selection("single")
+    options.configure_selection(selection_mode="multiple", rowMultiSelectWithClick=True)
 
     selection = AgGrid(
         df,
@@ -79,23 +138,16 @@ placeholder = st.empty()
 # Empty Placeholder Filled
 with placeholder.container():
     st.markdown("### All PP Details")
-    # st.write(df.to_html(escape=False), unsafe_allow_html=True)
-    # st.dataframe(df)
     selection = aggrid_interactive_table(
         df[['number', 'Batch', 'Type', 'Total Score', 'Background', 'Base', 'Outfit',
             'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder',
             'Mouth']])
 
-    try:
-        image_number = selection["selected_rows"][0]['number']
-        image_url = (df[df['number'] == image_number]['image']).iloc[0]
-    except Exception as e:
-        image_number = ""
-        image_url = "https://www.liquiddriver.finance/static/media/logoImg.32a133f7.svg"
+    # Image Data
+    image_number = [i['number'] for i in selection["selected_rows"]]
+    image_url = (df[df['number'].isin(image_number)]['image'])
 
     if selection:
-        st.write("You selected:")
-
-        st.image(image_url, caption=["# " + str(image_number)], width=200)  # Images
+        st.image(image_url.tolist(), caption=["# " + str(i) for i in image_number], width=200)  # Images
 
     time.sleep(1)

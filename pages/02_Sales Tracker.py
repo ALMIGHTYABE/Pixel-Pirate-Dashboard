@@ -51,31 +51,41 @@ sales_df['tokenId'] = sales_df['tokenId'].apply(lambda x: int(x))
 sales_df = pd.merge(sales_df, nft_df[['number', 'name', 'image', 'Batch', 'Type', 'Total Score']], left_on='tokenId',
                     right_on='number', how='left')
 sales_df['image'] = sales_df['image'].apply(lambda x: '<img src=' + x + ' width="100">')
+sales_df['Rarity Score / FTM'] = sales_df['Total Score'] / sales_df['price']
 
 # Sorting
-sort_option = st.radio(
-    "Sort by",
-    ('Price: Highest to Lowest', 'Price: Lowest to Highest', 'Rarity Score: Highest to Lowest', 'Rarity Score: Lowest to Highest'))
+sort_option = st.selectbox(
+    label="Sort by",
+    options=('Price: Highest to Lowest', 'Price: Lowest to Highest', 'Rarity Score: Highest to Lowest',
+             'Rarity Score: Lowest to Highest', 'Rarity Score / FTM: Highest to Lowest',
+             'Rarity Score / FTM: Lowest to Highest'),
+    index=0)
 
 # creating a single-element container
 placeholder = st.empty()
 
 # Empty Placeholder Filled
 with placeholder.container():
-    df = sales_df[['id', 'image', 'name', 'Batch', 'Type', 'Total Score', 'price', 'url']]
-    df.columns = ['Sales ID', 'PP Image', 'Name', 'Batch', 'Type', 'Rarity Score', 'Price FTM', 'URL']
+    df = sales_df[['id', 'image', 'name', 'Batch', 'Type', 'Total Score', 'price', 'Rarity Score / FTM', 'url']]
+    df.columns = ['Sales ID', 'PP Image', 'Name', 'Batch', 'Type', 'Rarity Score', 'Price in FTM', 'Rarity Score / FTM',
+                  'URL']
 
     if sort_option == 'Price: Highest to Lowest':
-        df.sort_values(by=['Price FTM'], ascending=False, inplace=True)
+        df.sort_values(by=['Price in FTM'], ascending=False, inplace=True)
         st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
     elif sort_option == 'Price: Lowest to Highest':
-        df.sort_values(by=['Price FTM'], ascending=True, inplace=True)
+        df.sort_values(by=['Price in FTM'], ascending=True, inplace=True)
         st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
     elif sort_option == 'Rarity Score: Highest to Lowest':
         df.sort_values(by=['Rarity Score'], ascending=False, inplace=True)
         st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
-    else:
+    elif sort_option == 'Rarity Score: Lowest to Highest':
         df.sort_values(by=['Rarity Score'], ascending=True, inplace=True)
         st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
-
+    elif sort_option == 'Rarity Score / FTM: Highest to Lowest':
+        df.sort_values(by=['Rarity Score / FTM'], ascending=False, inplace=True)
+        st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
+    else:
+        df.sort_values(by=['Rarity Score / FTM'], ascending=True, inplace=True)
+        st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
     time.sleep(1)

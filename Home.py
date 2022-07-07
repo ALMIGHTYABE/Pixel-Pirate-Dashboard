@@ -108,30 +108,6 @@ df = df[df["Hand_Accessories"].isin(hand_choice)]
 df = df[df["Shoulder"].isin(shoulder_choice)]
 df = df[df["Mouth"].isin(mouth_choice)]
 
-# traits = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder', 'Mouth']
-
-
-# # Finding Missing Traits
-# background_missing = [i for i in background if i not in pd.unique(df["Background"])]
-# base_missing = [i for i in base if i not in pd.unique(df["Base"])]
-# outfit_missing = [i for i in outfit if i not in pd.unique(df["Outfit"])]
-# necklace_missing = [i for i in necklace if i not in pd.unique(df["Necklace"])]
-# eye_missing = [i for i in eye if i not in pd.unique(df["Eye"])]
-# beard_missing = [i for i in beard if i not in pd.unique(df["Beard"])]
-# hair_missing = [i for i in hair if i not in pd.unique(df["Hair"])]
-# hat_missing = [i for i in hat if i not in pd.unique(df["Hat"])]
-# hand_missing = [i for i in hand if i not in pd.unique(df["Hand_Accessories"])]
-# shoulder_missing = [i for i in shoulder if i not in pd.unique(df["Shoulder"])]
-# mouth_missing = [i for i in mouth if i not in pd.unique(df["Mouth"])]
-#
-# missing = pd.DataFrame(
-#     [background_missing, base_missing, outfit_missing, necklace_missing, eye_missing, beard_missing, hair_missing,
-#      hat_missing, hand_missing, shoulder_missing, mouth_missing])
-# missing = missing.transpose()
-# missing.columns = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories',
-#                    'Shoulder', 'Mouth']
-# missing.fillna('', inplace=True)
-
 
 # Aggrid Defined
 def aggrid_interactive_table(df: pd.DataFrame):
@@ -161,47 +137,58 @@ def aggrid_interactive_table(df: pd.DataFrame):
 
 # Empty Placeholder Filled
 with placeholder.container():
-    # Image
-    st.image(df["image"].tolist(), caption=["# " + str(i) for i in df["number"]], width=100)  # Images
+    if address_filter:
+        # Number of NFTS
+        st.markdown("### Number of Pixel Pirates: {}".format(str(df.shape[0])))
 
-    # Filtered Table
-    st.markdown("### PP Details")
-    selection = aggrid_interactive_table(
-        df[['number', 'Batch', 'Type', 'Total Score', 'Background', 'Base', 'Outfit',
-            'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder',
-            'Mouth']])
+        # Image
+        st.image(df["image"].tolist(), caption=["# " + str(i) for i in df["number"]], width=100)  # Images
 
-    # Filtered Missing Traits
-    missing_traits = st.checkbox('See Missing Traits')
-    if missing_traits:
-        st.markdown("### Missing Traits")
-        missing_type_filter = st.multiselect("PP Type", ["Common", "Specials", "Legendary"], default=pd.unique(df["Type"]))
-        missing_df = df[df["Type"].isin(missing_type_filter)]
-        missing_nft_df = nft_df[nft_df["Type"].isin(missing_type_filter)]
+        # Filtered Table
+        st.markdown("### PP Details")
+        selection = aggrid_interactive_table(
+            df[['number', 'Batch', 'Type', 'Total Score', 'Background', 'Base', 'Outfit',
+                'Necklace', 'Eye', 'Beard', 'Hair', 'Hat', 'Hand_Accessories', 'Shoulder',
+                'Mouth']])
 
-        # Finding Missing Traits
-        background_missing = [i for i in pd.unique(missing_nft_df["Background"]) if i not in pd.unique(missing_df["Background"])]
-        base_missing = [i for i in pd.unique(missing_nft_df["Base"]) if i not in pd.unique(missing_df["Base"])]
-        outfit_missing = [i for i in pd.unique(missing_nft_df["Outfit"]) if i not in pd.unique(missing_df["Outfit"])]
-        necklace_missing = [i for i in pd.unique(missing_nft_df["Necklace"]) if i not in pd.unique(missing_df["Necklace"])]
-        eye_missing = [i for i in pd.unique(missing_nft_df["Eye"]) if i not in pd.unique(missing_df["Eye"])]
-        beard_missing = [i for i in pd.unique(missing_nft_df["Beard"]) if i not in pd.unique(missing_df["Beard"])]
-        hair_missing = [i for i in pd.unique(missing_nft_df["Hair"]) if i not in pd.unique(missing_df["Hair"])]
-        hat_missing = [i for i in pd.unique(missing_nft_df["Hat"]) if i not in pd.unique(missing_df["Hat"])]
-        hand_missing = [i for i in pd.unique(missing_nft_df["Hand_Accessories"]) if i not in pd.unique(missing_df["Hand_Accessories"])]
-        shoulder_missing = [i for i in pd.unique(missing_nft_df["Shoulder"]) if i not in pd.unique(missing_df["Shoulder"])]
-        mouth_missing = [i for i in pd.unique(missing_nft_df["Mouth"]) if i not in pd.unique(missing_df["Mouth"])]
+        # Filtered Missing Traits
+        missing_traits = st.checkbox('See Missing Traits')
+        if missing_traits:
+            st.markdown("### Missing Traits")
+            missing_type_filter = st.multiselect("PP Type", ["Common", "Specials", "Legendary"],
+                                                 default=pd.unique(df["Type"]))
+            missing_df = df[df["Type"].isin(missing_type_filter)]
+            missing_nft_df = nft_df[nft_df["Type"].isin(missing_type_filter)]
 
-        missing = pd.DataFrame(
-            [background_missing, base_missing, outfit_missing, necklace_missing, eye_missing, beard_missing,
-             hair_missing,
-             hat_missing, hand_missing, shoulder_missing, mouth_missing])
-        missing = missing.transpose()
-        missing.columns = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat',
-                           'Hand_Accessories',
-                           'Shoulder', 'Mouth']
-        missing.fillna('', inplace=True)
+            # Finding Missing Traits
+            background_missing = [i for i in pd.unique(missing_nft_df["Background"]) if
+                                  i not in pd.unique(missing_df["Background"])]
+            base_missing = [i for i in pd.unique(missing_nft_df["Base"]) if i not in pd.unique(missing_df["Base"])]
+            outfit_missing = [i for i in pd.unique(missing_nft_df["Outfit"]) if i not in pd.unique(missing_df["Outfit"])]
+            necklace_missing = [i for i in pd.unique(missing_nft_df["Necklace"]) if
+                                i not in pd.unique(missing_df["Necklace"])]
+            eye_missing = [i for i in pd.unique(missing_nft_df["Eye"]) if i not in pd.unique(missing_df["Eye"])]
+            beard_missing = [i for i in pd.unique(missing_nft_df["Beard"]) if i not in pd.unique(missing_df["Beard"])]
+            hair_missing = [i for i in pd.unique(missing_nft_df["Hair"]) if i not in pd.unique(missing_df["Hair"])]
+            hat_missing = [i for i in pd.unique(missing_nft_df["Hat"]) if i not in pd.unique(missing_df["Hat"])]
+            hand_missing = [i for i in pd.unique(missing_nft_df["Hand_Accessories"]) if
+                            i not in pd.unique(missing_df["Hand_Accessories"])]
+            shoulder_missing = [i for i in pd.unique(missing_nft_df["Shoulder"]) if
+                                i not in pd.unique(missing_df["Shoulder"])]
+            mouth_missing = [i for i in pd.unique(missing_nft_df["Mouth"]) if i not in pd.unique(missing_df["Mouth"])]
 
-        selection = aggrid_interactive_table(missing)
+            missing = pd.DataFrame(
+                [background_missing, base_missing, outfit_missing, necklace_missing, eye_missing, beard_missing,
+                 hair_missing,
+                 hat_missing, hand_missing, shoulder_missing, mouth_missing])
+            missing = missing.transpose()
+            missing.columns = ['Background', 'Base', 'Outfit', 'Necklace', 'Eye', 'Beard', 'Hair', 'Hat',
+                               'Hand_Accessories',
+                               'Shoulder', 'Mouth']
+            missing.fillna('', inplace=True)
+
+            selection = aggrid_interactive_table(missing)
+        else:
+            pass
 
     time.sleep(1)
