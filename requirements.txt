@@ -4,3 +4,5 @@ pandas
 plotly-express
 streamlit
 streamlit-aggrid
+st_btn_select
+

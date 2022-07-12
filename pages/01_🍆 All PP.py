@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # Title
-st.title("All PP")
+st.title("🍆 All PP")
 # st.markdown("# All PP")
 
 # Params
@@ -33,7 +33,6 @@ config = read_params(params_path)
 dataset_url = config["main"]["data-source"]
 
 
-# @st.experimental_memo
 def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 
@@ -43,8 +42,6 @@ df = get_data()
 # Sidebar Data
 batch = pd.unique(df["Batch"])
 type = pd.unique(df["Type"])
-# score_min = df["Total Score"].min()
-# score_max = df["Total Score"].max()
 background = pd.unique(df["Background"])
 base = pd.unique(df["Base"])
 outfit = pd.unique(df["Outfit"])
@@ -63,8 +60,6 @@ batch_choice = st.sidebar.multiselect(
     'Choose batch:', batch, default=batch)
 type_choice = st.sidebar.multiselect(
     'Choose type:', type, default=type)
-# score_range = st.slider(
-# 'Select a score range', value=[score_min, score_max])
 background_choice = st.sidebar.multiselect(
     'Choose background:', background, default=background)
 base_choice = st.sidebar.multiselect(
@@ -91,7 +86,6 @@ mouth_choice = st.sidebar.multiselect(
 # dataframe filter
 df = df[df["Batch"].isin(batch_choice)]
 df = df[df["Type"].isin(type_choice)]
-# df = df[df["Total Score"].between(score_range[0], score_range[1], inclusive="both")]
 df = df[df["Background"].isin(background_choice)]
 df = df[df["Base"].isin(base_choice)]
 df = df[df["Outfit"].isin(outfit_choice)]

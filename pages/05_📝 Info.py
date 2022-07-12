@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 # Title
-st.title("Info")
+st.title("📝 Info")
 
 # Content
 st.write("This web app is in beta. Will try to add more features and functions in the future.")
@@ -18,4 +18,5 @@ st.write("The scores calculated are not official, I am not responsible for any l
 st.write("The rarity scores is roughly calculated as follows:")
 st.write(
     "[Rarity Score for a Trait Value] = 1 / ([Number of Items with that Trait Value] / [Total Number of Items in Collection])")
-st.write("Additionally a bonus score is given to PPs that were 1/1s and specials")
+st.write("Additionally a bonus score is given to PPs that were 1/1s and specials.")
+st.write("Stats Page includes data from all NFTs under the Hedgeys collection.")

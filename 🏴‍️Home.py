@@ -14,6 +14,11 @@ st.set_page_config(
     layout="wide",
 )
 
+# Dashboard Title
+col1, col2 = st.columns(2)
+col1.title("🏴‍☠️Pixel Pirate Tracker")
+col2.markdown('<div style="text-align: right;">Data is updated every 30 minutes</div>', unsafe_allow_html=True)
+
 # Params
 params_path = "params.yaml"
 
@@ -30,7 +35,6 @@ config = read_params(params_path)
 dataset_url = config["main"]["data-source"]
 
 
-# @st.experimental_memo
 def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 
@@ -53,9 +57,6 @@ hat = pd.unique(df["Hat"])
 hand = pd.unique(df["Hand_Accessories"])
 shoulder = pd.unique(df["Shoulder"])
 mouth = pd.unique(df["Mouth"])
-
-# Dashboard Title
-st.title("Pixel Pirate Tracker")
 
 # Top-Level Filters
 address_filter = st.multiselect("Select your address", pd.unique(df["address"]))
@@ -164,7 +165,8 @@ with placeholder.container():
             background_missing = [i for i in pd.unique(missing_nft_df["Background"]) if
                                   i not in pd.unique(missing_df["Background"])]
             base_missing = [i for i in pd.unique(missing_nft_df["Base"]) if i not in pd.unique(missing_df["Base"])]
-            outfit_missing = [i for i in pd.unique(missing_nft_df["Outfit"]) if i not in pd.unique(missing_df["Outfit"])]
+            outfit_missing = [i for i in pd.unique(missing_nft_df["Outfit"]) if
+                              i not in pd.unique(missing_df["Outfit"])]
             necklace_missing = [i for i in pd.unique(missing_nft_df["Necklace"]) if
                                 i not in pd.unique(missing_df["Necklace"])]
             eye_missing = [i for i in pd.unique(missing_nft_df["Eye"]) if i not in pd.unique(missing_df["Eye"])]

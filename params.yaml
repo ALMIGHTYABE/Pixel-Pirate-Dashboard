@@ -3,3 +3,7 @@ main:
 
 sales:
   api: https://api.paintswap.finance/v2/sales?collections=0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351&numToFetch=1000
+  history: https://raw.githubusercontent.com/ALMIGHTYABE/Pixel-Pirate-Tracker/main/pphistory.csv
+
+stats:
+  api: https://api.paintswap.finance/v2/collections/0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351
