@@ -12,7 +12,9 @@ st.set_page_config(
 )
 
 # Title
-st.title("🏆 Treasure Eligibility")
+col1, col2 = st.columns(2)
+col1.title("🏆 Treasure Eligibility")
+col2.markdown('<div style="text-align: right;">Snapshot taken on 30th July</div>', unsafe_allow_html=True)
 
 # Params
 params_path = "params.yaml"
@@ -27,10 +29,9 @@ def read_params(config_path):
 config = read_params(params_path)
 
 # Read Data
-dataset_url = config["main"]["data-source"]
+dataset_url = config["treasure"]["data"]
 
 
-# @st.experimental_memo
 def get_data() -> pd.DataFrame:
     return pd.read_csv(dataset_url)
 
@@ -45,30 +46,17 @@ placeholder = st.empty()
 
 # dataframe filter
 df = df[df["address"] == address_filter]
-
-# Computing Eligibility
-batch_counts = pd.DataFrame(df['Batch'].value_counts())
-batch_counts.reset_index(inplace=True)
-batch_counts.columns = ['Batch', 'Number of PPs']
-batch_counts.sort_values(by=['Batch'], axis=0, inplace=True)
-batch_counts.style.hide(axis="index")
-min_pp = batch_counts['Number of PPs'].min()
-batch_counts['Bool'] = batch_counts['Number of PPs'].apply(lambda i: True if i >= min_pp else False)
+df.reset_index(drop=True, inplace=True)
 
 # Empty Placeholder Filled
 with placeholder.container():
     if address_filter:
-        if (batch_counts['Bool'].all(axis=0)) & (min_pp == 1) & (len(batch_counts) == 6):
-            st.markdown("### You are eligible to receive {} treasure.".format(min_pp))
-            st.write(batch_counts[['Batch', 'Number of PPs']].to_html(escape=False, index=False),
-                     unsafe_allow_html=True)
-        elif (batch_counts['Bool'].all(axis=0)) & (min_pp > 1) & (len(batch_counts) == 6):
-            st.markdown("### You are eligible to receive {} treasures.".format(min_pp))
-            st.write(batch_counts[['Batch', 'Number of PPs']].to_html(escape=False, index=False),
-                     unsafe_allow_html=True)
+        if df["Treasures"][0] == 1:
+            st.markdown("### You are eligible to receive {} treasure.".format(df["Treasures"][0]))
+
         else:
-            st.markdown(
-                "### You are not eligible to receive any treasures. Collect one Pixel Pirate from each batch to be eligible.")
-            st.write(batch_counts[['Batch', 'Number of PPs']].to_html(escape=False, index=False),
-                     unsafe_allow_html=True)
+            st.markdown("### You are eligible to receive {} treasures.".format(df["Treasures"][0]))
+
+
+
     time.sleep(1)

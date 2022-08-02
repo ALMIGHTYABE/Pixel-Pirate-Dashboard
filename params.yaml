@@ -7,3 +7,6 @@ sales:
 
 stats:
   api: https://api.paintswap.finance/v2/collections/0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351
+
+treasure:
+  data: https://raw.githubusercontent.com/ALMIGHTYABE/Pixel-Pirate-Tracker/main/Snapshot%20Data/Treasure%20Address%20Wise.csv
