@@ -11,4 +11,4 @@ A Pixel Pirate Dashboard that updates information frequently using Streamlit as 
 - Track active sales and sales history
 - Check Treasure Eligibility
 
-Web App Link: https://pixel-pirate-tracker.herokuapp.com/
+Web-App Link: https://pixel-pirate-tracker.herokuapp.com/
