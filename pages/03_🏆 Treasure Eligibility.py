@@ -1,5 +1,6 @@
 # Importing Libraries
 import time
+
 import pandas as pd
 import streamlit as st
 import yaml
@@ -56,7 +57,5 @@ with placeholder.container():
 
         else:
             st.markdown("### You are eligible to receive {} treasures.".format(df["Treasures"][0]))
-
-
 
     time.sleep(1)

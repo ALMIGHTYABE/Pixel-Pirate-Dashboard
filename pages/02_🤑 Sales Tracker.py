@@ -1,11 +1,12 @@
 # Importing Libraries
-import requests
 import time
+
 import pandas as pd
+import plotly.express as px
+import requests
 import streamlit as st
 import yaml
 from st_btn_select import st_btn_select
-import plotly.express as px
 
 # App
 st.set_page_config(
@@ -78,31 +79,31 @@ if selection == "Active Sales":
     # Sidebar - title & filters
     st.sidebar.markdown('### Data Filters')
     batch_choice = st.sidebar.multiselect(
-    'Choose batch:', batch, default = batch)
+        'Choose batch:', batch, default=batch)
     type_choice = st.sidebar.multiselect(
-    'Choose type:', type, default = type)
+        'Choose type:', type, default=type)
     background_choice = st.sidebar.multiselect(
-    'Choose background:', background, default = background)
+        'Choose background:', background, default=background)
     base_choice = st.sidebar.multiselect(
-    'Choose base:', base, default = base)
+        'Choose base:', base, default=base)
     outfit_choice = st.sidebar.multiselect(
-    'Choose outfit:', outfit, default = outfit)
+        'Choose outfit:', outfit, default=outfit)
     necklace_choice = st.sidebar.multiselect(
-    'Choose necklace:', necklace, default = necklace)
+        'Choose necklace:', necklace, default=necklace)
     eye_choice = st.sidebar.multiselect(
-    'Choose eye:', eye, default = eye)
+        'Choose eye:', eye, default=eye)
     beard_choice = st.sidebar.multiselect(
-    'Choose beard:', beard, default = beard)
+        'Choose beard:', beard, default=beard)
     hair_choice = st.sidebar.multiselect(
-    'Choose hair:', hair, default = hair)
+        'Choose hair:', hair, default=hair)
     hat_choice = st.sidebar.multiselect(
-    'Choose hat:', hat, default = hat)
+        'Choose hat:', hat, default=hat)
     hand_choice = st.sidebar.multiselect(
-    'Choose hand:', hand, default = hand)
+        'Choose hand:', hand, default=hand)
     shoulder_choice = st.sidebar.multiselect(
-    'Choose shoulder:', shoulder, default = shoulder)
+        'Choose shoulder:', shoulder, default=shoulder)
     mouth_choice = st.sidebar.multiselect(
-    'Choose mouth:', mouth, default = mouth)
+        'Choose mouth:', mouth, default=mouth)
 
     # dataframe filter
     sales_df = sales_df[sales_df["Batch"].isin(batch_choice)]

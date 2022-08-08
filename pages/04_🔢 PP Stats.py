@@ -1,9 +1,9 @@
 # Importing Libraries
-import streamlit as st
-import requests
 import pandas as pd
-import yaml
 import plotly.express as px
+import requests
+import streamlit as st
+import yaml
 
 # App
 st.set_page_config(
@@ -56,16 +56,15 @@ for i in columns_with_nos:
 
 # Getting data ready
 unique_holders = len(nft_df.address.unique())  # Unique PP Holders
-pp_floor = stats_df['collection.stats.floor'][0] # PP Floor
-number_of_pps = len(nft_df) # Number of PPs
-number_of_active_sales = stats_df['collection.stats.sale.numActiveSales'][0] # Number of Active Sales
-number_of_trades_24hr = stats_df['collection.stats.sale.numTradesLast24Hours'][0] # Number of Trades Last 24 Hours
-volume_24hr = stats_df['collection.stats.volumeLast24Hours'][0] # Volume Last 24 Hours
-number_of_trades_7d = stats_df['collection.stats.sale.numTradesLast7Days'][0] # Number of Trades Last 7 Days
-volume_7d = stats_df['collection.stats.volumeLast7Days'][0] # Volume Last 7 Days
-number_of_trades_alltime = stats_df['collection.stats.sale.totalTrades'][0] # Total Number of Sales
-volume_alltime = stats_df['collection.stats.totalVolumeTraded'][0] # Total Volume Traded
-
+pp_floor = stats_df['collection.stats.floor'][0]  # PP Floor
+number_of_pps = len(nft_df)  # Number of PPs
+number_of_active_sales = stats_df['collection.stats.sale.numActiveSales'][0]  # Number of Active Sales
+number_of_trades_24hr = stats_df['collection.stats.sale.numTradesLast24Hours'][0]  # Number of Trades Last 24 Hours
+volume_24hr = stats_df['collection.stats.volumeLast24Hours'][0]  # Volume Last 24 Hours
+number_of_trades_7d = stats_df['collection.stats.sale.numTradesLast7Days'][0]  # Number of Trades Last 7 Days
+volume_7d = stats_df['collection.stats.volumeLast7Days'][0]  # Volume Last 7 Days
+number_of_trades_alltime = stats_df['collection.stats.sale.totalTrades'][0]  # Total Number of Sales
+volume_alltime = stats_df['collection.stats.totalVolumeTraded'][0]  # Total Volume Traded
 
 # creating a single-element container
 placeholder = st.empty()
@@ -79,19 +78,18 @@ with placeholder.container():
     col3.metric("PP Floor in FTM", pp_floor)
     col4.metric("Number of Active Sales", number_of_active_sales)
 
-    dfg = nft_df['address'].value_counts().reset_index().sort_values('address', ascending = False).head(10)
+    dfg = nft_df['address'].value_counts().reset_index().sort_values('address', ascending=False).head(10)
     dfg['index'] = [i[:6] for i in dfg['index']]
-    fig = px.bar(dfg, x='address', y ='index', labels={"address": "Number of PPs", "index": "Holders"}, text='address')
-    fig.update_layout(title="Top 10 PP Whales", xaxis_title="Number of PPs", yaxis_title="Holders", yaxis={'categoryorder': 'total ascending'})
+    fig = px.bar(dfg, x='address', y='index', labels={"address": "Number of PPs", "index": "Holders"}, text='address')
+    fig.update_layout(title="Top 10 PP Whales", xaxis_title="Number of PPs", yaxis_title="Holders",
+                      yaxis={'categoryorder': 'total ascending'})
     st.plotly_chart(fig, use_container_width=True)
-
 
     col1, col2, col3 = st.columns(3)
 
     col1.markdown("#### Last 24 Hours")
     col2.markdown("#### Last 7 Days")
     col3.markdown("#### All Time")
-
 
     col1, col2, col3, col4, col5, col6 = st.columns(6)
 
