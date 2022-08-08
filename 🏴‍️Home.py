@@ -2,7 +2,6 @@
 import time
 
 import pandas as pd  # read csv, df manipulation
-# import plotly.express as px  # interactive charts
 import streamlit as st  # data web app development
 import yaml
 from st_aggrid import AgGrid, GridOptionsBuilder
