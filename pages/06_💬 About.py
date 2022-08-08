@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 # Title
-st.title("☠ About")
+st.title("💬 About")
 
 # Content
 st.write("""## What is Pixel Pirates?
